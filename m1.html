@@ -1,0 +1,632 @@
+
+<tt>-H</tt> [user@]server[:port]
+</dt>
+<dd>
+<p>
+  Specify hostname and port number of http proxy server to
+  relay. If port is omitted, 80 is used.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-h</tt>
+</dt>
+<dd>
+<p>
+  Use HTTP proxy via proxy server sepcified by environment variable
+  <tt>HTTP_PROXY</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-S</tt> [_user_@]<em>server</em>\[:_port_]
+</dt>
+<dd>
+<p>
+  Specify hostname and port number of SOCKS server to
+  relay. Like <tt>-H</tt> option, port number can be omit and default is 1080.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-s</tt>
+</dt>
+<dd>
+<p>
+  Use SOCKS proxy via SOCKS server sepcified by environment variable
+  <tt>SOCKS5_SERVER</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-4</tt>
+</dt>
+<dd>
+<p>
+Use SOCKS version 4 protocol.
+  This option must be used with <tt>-S</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-5</tt>
+</dt>
+<dd>
+<p>
+Use SOCKS version 5 protocol.
+  This option must be used with <tt>-S</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-R</tt> <em>method</em>
+</dt>
+<dd>
+<p>
+The method to resolve hostname.  3 keywords (<tt>local</tt>,
+  <tt>remote</tt>, <tt>both</tt>) or dot-notation IP address is allowed. Keyword
+  both means; <em>"Try local first, then remote"</em>. If dot-notation IP
+  address is specified, use this host as nameserver (UNIX
+  only). Default is remote for SOCKS5 or local for others. On SOCKS4
+  protocol, remote resolving method (remote and both) use protocol
+  version 4a.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-p</tt> <em>port</em>
+</dt>
+<dd>
+<p>
+Accept on local TCP port and relay it instead of standard input
+and output. With this option, program will terminate when remote or
+local TCP session is closed.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-w</tt> <em>timeout</em>
+</dt>
+<dd>
+<p>
+Timeout seconds for connecting to remote host.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>-a</tt> <em>auth</em>
+</dt>
+<dd>
+<p>
+option specifiys user intended authentication methods
+separated by comma. Currently <tt>userpass</tt> and <tt>none</tt> are
+supported. Default is userpass. You can also specifying this parameter
+by the environment variable <tt>SOCKS5_AUTH</tt>.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p><tt>-d</tt>: Run with debug message output. If you fail to connect, use this
+option to see what is done.</p></div>
+<div class="paragraph"><p>As additional feature,
+you can omit port argument when program name is special format
+containing port number itself like "connect-25". For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ ln -s connect connect-25
+$ ./connect-25 smtphost.outside.net
+220 smtphost.outside.net ESMTP Sendmail
+QUIT
+221 2.0.0 smtphost.remote.net closing connection
+$</tt></pre>
+</div></div>
+<div class="paragraph"><p>This example means that the command name "connect-25" indicates port
+number 25 so you can omit 2nd argument (and used if specified
+explicitly).
+This is usefull for the application which invokes only with hostname
+argument.</p></div>
+<h3 id="_specifying_user_name_via_environment_variables">Specifying user name via environment variables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>There are 5 environemnt variables to specify user name without command
+line option. This mechanism is usefull for the user who using another
+user name different from system account.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<tt>SOCKS5_USER</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v5 access.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>SOCKS4_USER</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v4 access.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>SOCKS_USER</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v5 or v4 access and varaibles above are not defined.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>HTTP_PROXY_USER</tt>
+</dt>
+<dd>
+<p>
+    Used for HTTP proxy access.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>CONNECT_USER</tt>
+</dt>
+<dd>
+<p>
+    Used for all type of access if all above are not defined.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Following table describes how user name is determined. Left most number is order to check. If variable is not defined, check next variable, and so on.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">SOCKS v5</p></td>
+<td align="left" valign="top"><p class="table">SOCKS v4</p></td>
+<td align="left" valign="top"><p class="table">HTTP proxy</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table"><tt>SOCKS5_USER</tt></p></td>
+<td align="left" valign="top"><p class="table"><tt>SOCKS4_USER</tt></p></td>
+<td rowspan="2" align="center" valign="top"><p class="table"><tt>HTTP_PROXY_USER</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td colspan="2" align="center" valign="top"><p class="table"><tt>SOCKS_USER</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">3</p></td>
+<td colspan="3" align="center" valign="top"><p class="table"><tt>CONNECT_USER</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">4</p></td>
+<td colspan="3" align="center" valign="top"><p class="table">(query user name to system)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_specifying_password_via_environment_variables">Specifying password via environment variables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>There are 5 environemnt variables to specify password. If you use this
+feature, please note that it is not secure way.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<tt>SOCKS5_PASSWD</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v5 access. This variables is compatible with NEC SOCKS implementation.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>SOCKS5_PASSWORD</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v5 access if <tt>SOCKS5_PASSWD</tt> is not defined.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>SOCKS_PASSWORD</tt>
+</dt>
+<dd>
+<p>
+    Used for SOCKS v5 (or v4) access all above is not defined.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>HTTP_PROXY_PASSWORD</tt>
+</dt>
+<dd>
+<p>
+    Used for HTTP proxy access.
+</p>
+</dd>
+<dt class="hdlist1">
+<tt>CONNECT_PASSWORD</tt>
+</dt>
+<dd>
+<p>
+    Used for all type of access if all above are not defined.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Following table describes how password is determined. Left most number
+is order to check. If variable is not defined, check next variable,
+and so on. Finally ask to user interactively using external program or
+tty input.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">SOCKS v5</p></td>
+<td align="left" valign="top"><p class="table">HTTP proxy</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table"><tt>SOCKS5_PASSWD</tt></p></td>
+<td rowspan="2" align="center" valign="top"><p class="table"><tt>HTTP_PROXY_PASSWORD</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td align="left" valign="top"><p class="table"><tt>SOCKS_PASSWORD</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">3</p></td>
+<td colspan="2" align="center" valign="top"><p class="table"><tt>CONNECT_PASSWORD</tt></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">4</p></td>
+<td colspan="2" align="center" valign="top"><p class="table">(ask to user interactively)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="_limitations">Limitations</h2>
+<div class="sectionbody">
+<h3 id="_socks5_authentication">SOCKS5 authentication</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Only NO-AUTH and USER/PASSWORD authentications are supported. GSSAPI
+authentication (RFC 1961) and other draft authentications (CHAP, EAP,
+MAF, etc.) is not supported.</p></div>
+<h3 id="_http_authentication">HTTP authentication</h3><div style="clear:left"></div>
+<div class="paragraph"><p>BASIC authentication is supported but DIGEST authentication is not.</p></div>
+<h3 id="_switching_proxy_server_on_event">Switching proxy server on event</h3><div style="clear:left"></div>
+<div class="paragraph"><p>There is no mechanism to switch proxy server regarding to PC
+environment. This limitation might be bad news for mobile user. Since
+I do not want to make this program complex, I do not want to support
+although this feature is already requested. Please advice me if there
+is good idea of detecting environment to swich and simple way to
+specify conditioned directive of servers.</p></div>
+<div class="paragraph"><p>One tricky workaround exists. It is replacing <tt>~/.ssh/config</tt> file by
+script on ppp up/down.</p></div>
+<div class="paragraph"><p>There&#8217;s another example of wrapper script (contributed by Darren
+Tucker). This script costs executing ifconfig and grep to detect
+current environment, but it works.  Note that you should modify
+addresses if you use it.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#!/bin/sh
+## ~/bin/myconnect --- Proxy server switching wrapper
+
+if ifconfig eth0 |grep "inet addr:192\.168\.1" &gt;/dev/null; then
+        opts="-S 192.168.1.1:1080"
+elif ifconfig eth0 |grep "inet addr:10\." &gt;/dev/null; then
+        opts="-H 10.1.1.1:80"
+else
+        opts="-s"
+fi
+exec /usr/local/bin/connect $opts $@</tt></pre>
+</div></div>
+</div>
+<h2 id="_tips">Tips</h2>
+<div class="sectionbody">
+<h3 id="_proxying_socket_connection">Proxying socket connection</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In usual, <tt>connect.c</tt> relays network connection to/from standard
+input/output. By specifying -p option, however, <tt>connect.c</tt> relays local
+network stream instead of standard input/output. With this option,
+connect command waits connection from other program, then start
+relaying between both network stream.</p></div>
+<div class="paragraph"><p>This feature may be useful for the program which is hard to SOCKSify.</p></div>
+<h3 id="_use_with_ssh_askpass_command">Use with ssh-askpass command</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>connect.c</tt> ask you password when authentication is required. If you
+are using on tty/pty terminal, connect can input from terminal with
+prompt. But you can also use ssh-askpass program to input password. If
+you are graphical environment like X Window or MS Windows, and program
+does not have tty/pty, and environment variable <tt>SSH_ASKPASS</tt> is
+specified, then <tt>connect.c</tt> invoke command specified by environment
+variable SSH_ASKPASS to input password. ssh-askpass program might be
+installed if you are using OpenSSH on UNIX environment. On Windows
+environment, pre-compiled binary is available from here.</p></div>
+<div class="paragraph"><p>This feature is limited on window system environment.</p></div>
+<div class="paragraph"><p>And also useful on Emacs on MS Windows (NT Emacs or Meadow). It is
+hard to send passphrase to connect command (and also ssh) because
+external command is invoked on hidden terminal and do I/O with this
+terminal. Using ssh-askpass avoids this problem.</p></div>
+<h3 id="_use_for_network_stream_of_emacs">Use for Network Stream of Emacs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Although <tt>connect.c</tt> is made for OpenSSH, it is generic and independent
+from OpenSSH. So we can use this for other purpose. For example, you
+can use this command in Emacs to open network connection with remote
+host over the firewall via SOCKS or HTTP proxy without SOCKSifying
+Emacs itself.</p></div>
+<div class="paragraph"><p>There is sample code:
+<a href="http://bitbucket.org/gotoh/connect/src/tip/relay.el">http://bitbucket.org/gotoh/connect/src/tip/relay.el</a></p></div>
+<div class="paragraph"><p>With this code, you can use <tt>relay-open-network-stream</tt> function instead
+of <tt>open-network-stream</tt> to make network connection. See top comments of
+the source for more detail.</p></div>
+<h3 id="_remote_resolver">Remote resolver</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you are SOCKS4 user on UNIX environment, you might want specify
+nameserver to resolve remote hostname. You can do it specifying <tt>-R</tt>
+option followed by IP address of resolver.</p></div>
+<h3 id="_hopping_connection_via_ssh">Hopping Connection via SSH</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Conbination of ssh and connect command have more interesting
+usage. Following command makes indirect connection to host2:port from
+your current host via host1.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ ssh host1 connect host2 port</tt></pre>
+</div></div>
+<div class="paragraph"><p>This method is useful for the situations like:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+You are outside of organizasion now, but you want to access an
+  internal host barriered by firewall.
+</p>
+</li>
+<li>
+<p>
+You want to use some service which is allowed only from some limited hosts.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For example, I want to use local NetNews service in my office from
+home. I cannot make NNTP session directly because NNTP host is
+barriered by firewall. Fortunately, I have ssh account on internal
+host and allowed using SOCKS5 on firewall from outside. So I use
+following command to connect to NNTP service.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ ssh host1 connect news 119
+200 news.my-office.com InterNetNews NNRP server INN 2.3.2 ready (posting ok).
+quit
+205 .
+$</tt></pre>
+</div></div>
+<div class="paragraph"><p>By combinating hopping connection and relay.el, I can read NetNews
+using <a href="http://www.gohome.org/wl/">Wanderlust</a> on Emacs at home.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>                        |
+    External (internet) | Internal (office)
+                        |
++------+           +----------+          +-------+           +-----------+
+| HOME |           | firewall |          | host1 |           | NNTP host |
++------+           +----------+          +-------+           +-----------+
+ emacs &lt;-------------- ssh ---------------&gt; sshd &lt;-- connect --&gt; nntpd
+       &lt;-- connect --&gt; socksd &lt;-- SOCKS --&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>As an advanced example, you can use SSH hopping as fetchmail&#8217;s plug-in
+program to access via secure tunnel. This method requires that connect
+program is insatalled on remote host. There&#8217;s example of .fetchmailrc
+bellow. When fetchmail access to mail-server, you will login to remote
+host using SSH then execute connect program on remote host to relay
+conversation with pop server. Thus fetchmail can retrieve mails in
+secure.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>poll mail-server
+  protocol pop3
+  plugin "ssh %h connect localhost %p"
+  username "username"
+  password "password"</tt></pre>
+</div></div>
+</div>
+<h2 id="_break_the_more_restricted_wall">Break The More Restricted Wall</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If firewall does not provide SOCKS nor HTTPS other than port 443, you
+cannot break the wall in usual way. But if you have you own host which
+is accessible from internet, you can make ssh connection to your own
+host by configuring sshd as waiting at port 443 instead of standard
+22. By this, you can login to your own host via port 443. Once you
+have logged-in to extenal home machine, you can execute connect as
+second hop to make connection from your own host to final target host,
+like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>internal$ cat ~/.ssh/config
+Host home
+    ProxyCommand connect -H firewall:8080 %h 443
+
+Host server # internal
+    ProxyCommand ssh home connect %h %p
+
+internal$ ssh home
+You are logged in to home!
+home# exit
+internal$ ssh server
+You are logged in to server!
+server# exit
+internal$</tt></pre>
+</div></div>
+<div class="paragraph"><p>This way is similar to "Hopping connection via SSH" except configuring
+outer sshd as waiting at port 443 (https). This means that you have a
+capability to break the strongly restricted wall if you have own host
+out side of the wall.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>                        |
+      Internal (office) | External (internet)
+                        |
++--------+         +----------+                 +------+          +--------+
+| office |         | firewall |                 | home |          | server |
++--------+         +----------+                 +------+          +--------+
+   &lt;------------------ ssh ---------------------&gt;sshd:443
+    &lt;-- connect --&gt; http-proxy &lt;-- https:443 --&gt;                      any
+                                                 connect &lt;-- tcp --&gt;  port</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">If you wanna use this, you should give up hosting https
+      service at port 443 on you external host <em>home</em>.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="_f_y_i">F.Y.I.</h2>
+<div class="sectionbody">
+<h3 id="_difference_between_socks_versions">Difference between SOCKS versions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>SOCKS version 4 is first popular implementation which is documented
+<a href="http://www.socks.nec.com/protocol/socks4.protocol">here</a>. Since this
+protocol provide IP address based requesting, client program should
+resolve name of outer host by itself. Version 4a (documented
+<a href="http://www.socks.nec.com/protocol/socks4a.protocol">here</a>) is
+enhanced to allow request by hostname instead of IP address.</p></div>
+<div class="paragraph"><p>SOCKS version 5 is re-designed protocol stands on experience of
+version 4 and 4a. There is no compativility with previous
+versions. Instead, there&#8217;s some improvement: IPv6 support, request by
+hostname, UDP proxying, etc.</p></div>
+<h3 id="_configuration_to_use_https">Configuration to use HTTPS</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Many http proxy servers implementation supports https CONNECT method
+(SLL). You might add configuration to allow using https. For the
+example of <a href="http://www.delegate.org/delegate/">DeleGate</a> (DeleGate is a
+multi-purpose application level gateway, or a proxy server) , you
+should add https to REMITTABLE parameter to allow HTTP-Proxy like
+this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>delegated -Pxxxx ...... REMITTABLE='+,https' ...</tt></pre>
+</div></div>
+<div class="paragraph"><p>For the case of Squid, you should allow target ports via https by ACL,
+and so on.</p></div>
+<h3 id="_socks5_servers">SOCKS5 Servers</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<a href="http://www.socks.nec.com/refsoftware.html">NEC SOCKS Reference Implementation</a>
+</dt>
+<dd>
+<p>
+    Reference implementation of SOKCS server and library.
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.inet.no/dante/index.html">Dante</a>
+</dt>
+<dd>
+<p>
+    Dante is free implementation of SOKCS server and library. Many
+    enhancements and modulalized.
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.delegate.org/delegate/">DeleGate</a>
+</dt>
+<dd>
+<p>
+    DeleGate is multi function proxy service provider. DeleGate 5.x.x
+    or earlier can be SOCKS4 server, and 6.x.x can be SOCKS5 and
+    SOCKS4 server. and 7.7.0 or later can be SOCKS5 and SOCKS4a
+    server.
+</p>
+</dd>
+</dl></div>
+<h3 id="_specifications">Specifications</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<a href="http://www.socks.nec.com/protocol/socks4.protocol">socks4.protocol.txt</a>
+</dt>
+<dd>
+<p>
+    SOCKS: A protocol for TCP proxy across firewalls
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.socks.nec.com/protocol/socks4a.protocol">socks4a.protocol.txt</a>
+</dt>
+<dd>
+<p>
+    SOCKS 4A: A Simple Extension to SOCKS 4 Protocol
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.socks.nec.com/rfc/rfc1928.txt">RFC 1928</a>
+</dt>
+<dd>
+<p>
+    SOCKS Protocol Version 5
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.socks.nec.com/rfc/rfc1929.txt">RFC 1929</a>
+</dt>
+<dd>
+<p>
+    Username/Password Authentication for SOCKS V5
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.ietf.org/rfc/rfc2616.txt">RFC 2616</a>
+</dt>
+<dd>
+<p>
+    Hypertext Transfer Protocol&#8201;&#8212;&#8201;HTTP/1.1
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.ietf.org/rfc/rfc2617.txt">RFC 2617</a>
+</dt>
+<dd>
+<p>
+    HTTP Authentication: Basic and Digest Access Authentication
+</p>
+</dd>
+</dl></div>
+<h3 id="_related_links">Related Links</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.openssh.org/">OpenSSH Home</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.ssh.com/">Proprietary SSH</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://www.taiyo.co.jp/~gotoh/ssh/openssh-socks.html">Using OpenSSH through a SOCKS compatible PROXY on your LAN</a> (J. Grant)
+</p>
+</li>
+</ul></div>
+<h3 id="_similars">Similars</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<a href="http://proxytunnel.sourceforge.net/">Proxy Tunnel</a>
+</dt>
+<dd>
+<p>
+Proxying command using https CONNECT.
+</p>
+</dd>
+<dt class="hdlist1">
+<a href="http://www.snurgle.org/~griffon/ssh-https-tunnel">stunnel</a>
+</dt>
+<dd>
+<p>
+Proxy through an https tunnel (Perl script)
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2009-12-17 21:28:59 JST
+</div>
+</div>
+</body>
+</html>
